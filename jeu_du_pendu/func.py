@@ -10,46 +10,61 @@ from data import *
 def get_scores():
 
     """ function importing the scores_file if exists, or creating an empty
-        hash table if not, to attribute a value to 'score' variable """
+        hash table if not, to attribute a value to 'scores' variable """
     
     if os.path.exists(scores_file):
         with open(scores_file, "rb") as binary_reader:
-            depickler = pickle.Unpickler(pickle_reader)
-            scores = depickler.load()
+            depickler = pickle.Unpickler(binary_reader)
+            def_scores = depickler.load()
     else:
-        scores = {}
-    return scores
+        def_scores = dict()
+    return def_scores
 
 
 
 
 
-def get_user():
+def get_user(scores):
+
+    # ma 1re version ne prenait pas le dict scores en paramètres :
+    # l'enchaînement des 2 1res fonctions, get_scores() et get_user() marchait
+    # alors très bien lorsque je lançait CE script de fonction dans le shell, mais
+    # dans le fichier main, cette fonction get_user(), sans paramètre donc
+    # dans sa 1re version, levait une NameError disant
+    # que le nom 'scores" n'était pas assigné... Ne comprenant pas bien comment ça
+    # pouvait fonctionner depuis ce fichier func.py mais pas depuis le fichier main,
+    # qui après tout ne fait qu'appliquer les mêmes fonctions, j'ai essayé en passant
+    # 'scores' en paramètres et ça fonctionne. Fausse bonne nouvelle, car je ne comprends
+    # absolument pas pourquoi il faut lui passer le dictionnaire en paramètres pour qu'elle
+    # fonctionne. Il me semblait que si une fonction ne trouvait pas une variable dans son
+    # espace local, elle le cherchait dans l'espace parent, or dans le fichier main la variable
+    # scores était très clairement définie à la ligne précédente, et se voyait bien assigner
+    # une valeur
 
     """ function identifying or creating a username in scores hash table.
     Returns a user_name to capture in a 'user' var """
     
-    user_name = input("Entrez votre nom d'utilisateur courant : ")
-    if user_name in scores.keys():
-        print("Je vous ai trouvé(e), {}. Votre score est actuellement de {}".format\
-              (user_name, scores[user_name]))
+    user = input("\nEntrez votre nom d'utilisateur courant : ")
+    if user in scores.keys():
+        print("Je vous ai trouvé(e), {}. Votre score est actuellement de {}. Bonne partie".format\
+              (user, scores[user]))
     else:
-        print("Vous n'êtes pas un utilisateur enregistré...")
+        print("\nVous n'êtes pas un utilisateur enregistré...")
         choice_loop = True
         while choice_loop:
-            user_choice = input("Vous pouvez taper \"info\" puis Entrée pour \
+            user_choice = input("\nVous pouvez taper \"info\" puis Entrée pour \
 vérifier dans la liste des joueurs, ou Entrée pous vous logger \
 en tant que nouvel utilisateur : ")
             if user_choice.lower() == "info":
-                print("Liste des joueurs enregistrés :\n")
+                print("Liste des joueurs enregistrés : ")
                 for player in scores.keys():
                     print("{}".format(player))
-                return get_user()
+                return get_user(scores)
             else:
-                print("Très bien, {}. Vous êtes désormais dans la liste des joueurs".format(user_name))
-                scores[user_name] = 0
+                print("\nTrès bien, {}. Vous êtes désormais dans la liste des joueurs, avec 0 points".format(user))
+                scores[user] = 0
                 break
-    return user_name
+    return user
                 
         
 
@@ -65,7 +80,12 @@ def get_random_word():
 
 
 
-def lets_play():
+def lets_play(word):
+
+    # idem que pour la fonction get_user() : sans paramètre, elle ne reconnait
+    # pas la variable 'word", qui a reçu le résultat de get_random_word pourtant.
+    # lorsque je teste dans le shell lancé depuis le fichier main(), une fois l'erreur
+    # levée, la variable word a pourant bien reçu le résultat de get_random_word()
 
     """ Games's core. Returns the player's remaining strokes, to be
     captured and converted in score right after """
@@ -76,6 +96,7 @@ def lets_play():
 
     found_letters = str()
     remaining_strokes = permitted_strokes
+    print("Le mot que vous devez trouver comporte {} lettres\n".format(len(word)))
 
     while remaining_strokes > 0:
         print("Il vous restes {} chances\n".format(remaining_strokes))
@@ -117,9 +138,9 @@ def lets_play():
 
 
     if remaining_strokes == 0:
-        print("Désolé l'ami(e), vous n'avez plus d'essais... Vous n'avez donc marqué aucun point !")
+        print("\nDésolé l'ami(e), vous n'avez plus d'essais... Vous n'avez donc marqué aucun point !")
     else:
-        print("Il vous restait {} tentatives, vous avez donc marqué {} points".format(remaining_strokes))
+        print("\nIl vous restait {0} tentatives, vous avez donc marqué {0} points".format(remaining_strokes))
 
     return remaining_strokes
             
@@ -127,7 +148,17 @@ def lets_play():
 
 
 
-def save_score():
+def save_scores(scores):
+
+    # là encore, ne fonctionnait pas sans argument... dans le fichier main, c'était la ligne
+    # d'appel de la fonction elle-même qui posait problème, et non comme précédemment l'usage
+    # de certaines variables dans le bloc d'instructions de la fonction (variables définies en dehors du
+    # bloc.
+    # Comment python peut-il affirmer que l'appel save_scores(), dans le fichier main,
+    # n'est pas reconnu, alors même
+    # que j'ai importé un module comportant cette fonction (bien sûr, j'ai vérifié l'orthorgraphe, là
+    # n'était pas le problème) ???
+    
     with open(scores_file, "wb") as writter:
         pickler = pickle.Pickler(writter)
         pickler.dump(scores)
