@@ -25,8 +25,8 @@ words_list = ["armoire",
     ]
 
 
-remaining_strokes = 8
+permitted_strokes = 8
 
 
-score_file_name = "scores"
+scores_file = "scores"
 
