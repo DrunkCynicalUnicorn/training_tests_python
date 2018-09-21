@@ -4,9 +4,7 @@ while play:
 
     
 
-    bissextile = False # le choix a été fait de fonctionner sur un objet booléen,
-                       # et non de se contenter d'afficher une réponse dans la
-                       # structure conditionnelle
+    bissextile = False 
     valid_year = False
 
 
