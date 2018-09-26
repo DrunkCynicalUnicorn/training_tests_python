@@ -1,4 +1,5 @@
 import random
+from math import ceil, floor
 
 def maze(size=10):
     """
@@ -35,7 +36,7 @@ def maze_list(size=10):
     maze_structure.append(wall_line)
     return maze_structure
 
-def maze_2(size=10, pourcent_w=50):
+def maze_2(size=10, percent_w=50):
     """
     Même exercice que maze mais avec un pourcentage de w à l'intérieur de labyrinthe défini
     par le paramètre pourcent
@@ -66,7 +67,7 @@ def maze_2(size=10, pourcent_w=50):
     
     return maze_structure
 
-def maze2_list(size=10, pourcent_w=50):
+def maze2_list(size=10, percent_w=50):
     """
     Même exercice que pour la fonction maze2 mais cette fois le labyrinthe doit être renvoyé sous forme
     d'une liste avec une chaîne de caractères pour chaque ligne
@@ -103,7 +104,7 @@ def check_maze(test_maze):
         maze[size-2][size-2]. So while inner mazes here are randomly produced here, if this "out-position" is filled
         with a wall, the test will return False, even if it could be possible from start-position to run through
         the maze to this end-position """
-        checked_maze = False
+    checked_maze = False
     
     if type(maze) is not list:
         maze = maze.splitlines()

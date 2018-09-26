@@ -66,14 +66,13 @@ def move(maze, player_location):
     """ takes a desired move in input, processes it to check if it's doable/valid, and returns
         the move in coordinates form, to be grabbed by player_pos var """
     
-    init_choice = False
-    while init_choice != True:
-        move = input("Use Z/Q/S/D keys to move, or type \"quit\" to quit, then hit \"Enter\" : ")
-        if move.lower() not in ["z", "q", "s", "d", "quit"]:
+    move_submit = False
+    while move_submit != True:
+        move = input("Use Z/Q/S/D keys to submit a move, then hit \"Enter\" : ")
+        if move.lower() not in ["z", "q", "s", "d"]:
             print("You didn't type a valid command... Getting out from the maze is gonna be long if you can't get a simple instruction...")
-            continue
         else:
-            init_choice = True
+            move_submit = True
 
     
     if move.lower() == "z":
